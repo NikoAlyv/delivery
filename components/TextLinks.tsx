@@ -1,8 +1,9 @@
-import React, { Fragment, useCallback, useMemo } from "react";
-import { StyleProp, Text, TextStyle } from "react-native";
+import React, {Fragment, useCallback, useMemo} from 'react';
+import {StyleProp, Text, TextStyle} from 'react-native';
 
-import { colors } from "../theme/colors";
-import { TypographyStyles } from "../theme/typography";
+import {colors} from '../theme/colors';
+import {TypographyStyles} from '../theme/typography';
+import {CommonStyles} from '../theme/common.styles';
 
 interface HighlightedText {
   text: string;
@@ -11,10 +12,8 @@ interface HighlightedText {
 
 interface TextLinkProps {
   content: string;
-  shouldReverse?: boolean;
   highlighted: HighlightedText[];
   center?: boolean;
-  right?: boolean;
   fontColor?: string;
   style?: StyleProp<TextStyle>;
 }
@@ -24,12 +23,11 @@ export const TextLink: React.FC<TextLinkProps> = ({
   highlighted,
   fontColor = colors.black,
   center,
-  right,
   style,
 }: TextLinkProps) => {
   const createHighlightedText = useCallback(
     (text: string, callback?: () => void, index?: number) => {
-      const key = callback ? `${text}-${index}-highlighted` : "remaining";
+      const key = callback ? `${text}-${index}-highlighted` : 'remaining';
       const color = callback ? fontColor : colors.gray;
 
       return (
@@ -37,18 +35,17 @@ export const TextLink: React.FC<TextLinkProps> = ({
           key={key}
           onPress={callback}
           disabled={!callback}
-          style={[{ color: colors }]}
-        >
+          style={[ {color: color}]}>
           {text}
         </Text>
       );
     },
-    [fontColor]
+    [fontColor],
   );
 
   const renderElements = useMemo(() => {
     let lastIndex = 0;
-    const elements = highlighted.map(({ text, callback }, index) => {
+    const elements = highlighted.map(({text, callback}, index) => {
       const startIndex = content.indexOf(text);
       const endIndex = startIndex + text.length;
       const normalText = content.slice(lastIndex, startIndex);
@@ -67,13 +64,7 @@ export const TextLink: React.FC<TextLinkProps> = ({
   }, [content, createHighlightedText, highlighted]);
 
   return (
-    <Text
-      style={[
-        // center && CommonStyles.textAlignCenter,
-        // right && CommonStyles.textAlignRight,
-        style,
-      ]}
-    >
+    <Text style={[center && CommonStyles.textAlignCenter, style]}>
       {renderElements}
     </Text>
   );

@@ -164,15 +164,17 @@ export const Input: React.FC<IInput> = ({
 const styles = StyleSheet.create({
   focused: {
     borderBottomWidth: 2,
-    borderColor: colors.gray,
+    borderColor: colors.blue,
   },
   wrapperDisabled: {},
   error: {
     color: colors.red,
   },
   wrapper: {
-    borderBottomWidth: 1,
-
+    borderWidth: 1,
+    borderRadius:12,
+    borderColor:colors.black,
+    padding:5,
     height: 40,
     gap: 10,
   },

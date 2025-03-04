@@ -1,24 +1,32 @@
-import { View, Text, ScrollView, StatusBar } from "react-native";
-import React, { useState } from "react";
-import { InputControlled } from "@/components/InputControlled";
-import { useForm } from "react-hook-form";
-import { FormRules } from "@/constants/formRules";
-import { colors } from "@/theme/colors";
-import { Button } from "@/components/Button";
+import { View, Text, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { InputControlled } from '@/components/InputControlled';
+import { useForm } from 'react-hook-form';
+import { FormRules } from '@/constants/formRules';
+import { colors } from '@/theme/colors';
+import { Button } from '@/components/Button';
+import { TextLink } from '@/components/TextLinks';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { NavigationParamList } from '@/types/navigation.types';
+import { Routes } from '@/routes/routes';
+import { CommonStyles } from '@/theme/common.styles';
+import { normalize } from '@/theme/metrics';
 
 export interface IRegister {
-    name: string;
-    password: string;
-    comfirmPassword: string;
-    email: string;
-  }
-export const RegisterScreen = () => {
-    const [loading, setLoading] = useState<boolean>(false);
+  name: string;
+  password: string;
+  comfirmPassword: string;
+  email: string;
+}
+export const RegisterScreen: React.FC<
+  NativeStackScreenProps<NavigationParamList, Routes.login>
+> = ({ navigation }) => {
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     control,
     handleSubmit,
-    formState: {errors, isLoading},
+    formState: { errors, isLoading },
   } = useForm<IRegister>({
     defaultValues: {
       name: '',
@@ -27,20 +35,20 @@ export const RegisterScreen = () => {
     },
   });
 
-
   return (
-<ScrollView
+    <ScrollView
       keyboardShouldPersistTaps="handled"
       scrollEnabled={false}
-      >
+      contentContainerStyle={[CommonStyles.flexJustifyCenter, styles.root]}
+    >
       <StatusBar backgroundColor={colors.white} barStyle={'dark-content'} />
-     
 
       <InputControlled
         control={control}
         errorMessage={errors.name?.message}
         rules={FormRules.fullName}
         label="User Name"
+        style={styles.inputSpace}
         placeholder="Enter your name"
         name="name"
         type="user"
@@ -49,11 +57,11 @@ export const RegisterScreen = () => {
       <InputControlled
         keyboardType="email-address"
         control={control}
+        style={styles.inputSpace}
         errorMessage={errors.email?.message}
         rules={FormRules.email}
         label="Email"
         name="email"
-        style={styles.space}
         type="text"
         placeholder="Enter your email"
       />
@@ -62,18 +70,16 @@ export const RegisterScreen = () => {
         placeholder="Enter your password"
         name="password"
         label="Password"
-        style={styles.space}
+        style={styles.inputSpace}
         errorMessage={errors.password?.message}
         type="password"
         rules={FormRules.password}
       />
 
       <Button
-        style={styles.button}
         title="Create an account"
+        style={styles.button}
         loading={loading}
-        textStyle={styles.buttonText}
-        onPress={handleSubmit(onSubmit)}
       />
       <TextLink
         content="Do syou have an account?
@@ -86,7 +92,18 @@ export const RegisterScreen = () => {
           },
         ]}
       />
-   
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  root: {
+    paddingHorizontal: normalize('horizontal', 24),
+  },
+  inputSpace: {
+    marginVertical: normalize('vertical', 10),
+  },
+  button: {
+    marginBottom: 10,
+  },
+});

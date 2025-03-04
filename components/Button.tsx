@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import React from "react";
 import { colors } from "@/theme/colors";
-import { windowWidth } from "@/theme/consts.styles";
 import { normalize } from "@/theme/metrics";
 
 interface IButton {
@@ -39,8 +38,7 @@ export const Button: React.FC<IButton> = ({
 
 const styles = StyleSheet.create({
   root: {
-    backgroundColor: colors.black,
-    width: windowWidth / 2,
+    backgroundColor: colors.blue,
     paddingVertical: normalize("vertical", 15),
     justifyContent: "center",
     borderRadius: 30,
@@ -48,5 +46,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     textAlign: "center",
+    fontSize:15
+    
   },
 });
