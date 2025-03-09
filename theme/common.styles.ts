@@ -1,5 +1,5 @@
-import {StyleSheet, TextStyle, ViewStyle} from 'react-native';
-import {windowHeight, windowWidth} from './consts.styles';
+import { StyleSheet, TextStyle, ViewStyle } from 'react-native';
+import { windowHeight, windowWidth } from './consts.styles';
 
 export const CommonStyles = StyleSheet.create({
   flex: {

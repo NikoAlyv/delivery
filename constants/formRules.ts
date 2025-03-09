@@ -1,39 +1,39 @@
-import { RegisterOptions } from "react-hook-form";
-import { Regex } from "./regexs";
+import { RegisterOptions } from 'react-hook-form';
+import { Regex } from './regexs';
 
 export class FormRules {
   public static fullName = {
     required: {
-      message: "UserName is required",
+      message: 'İstifadəçi adı tələb olunur',
       value: true,
     },
     pattern: {
       value: Regex.fullName,
-      message: "UserName must be 3-16 chars",
+      message: 'İstifadəçi adı 3-16 simvoldan ibarət olmalıdır',
     },
   } as RegisterOptions;
 
-  public static email = {
+  public static phone = {
     required: {
-      message: "Email is required",
+      message: 'Telefon tələb olunur',
       value: true,
     },
     pattern: {
-      value: Regex.email,
-      message: "Email is not valid",
+      value: Regex.phone,
+      message: 'Telefon nömrəsi uyğun deyil',
     },
   } as RegisterOptions;
 
   public static password = {
     required: {
       value: true,
-      message: "Password is required",
+      message: 'Parol tələb olunur',
     },
     validate: {
       minLength: (v: string) =>
-        v.length >= 8 || "Minimum 8 characters required",
+        v.length >= 8 || 'Minimum 8 simvol tələb olunur',
       maxLength: (v: string) =>
-        v.length <= 16 || "Maximum 16 characters allowed",
+        v.length <= 16 || 'Maksimum 16 simvol icazə verilir',
     },
   } as RegisterOptions;
 }

@@ -24,6 +24,7 @@ import {
   screenWidth,
   windowHeight,
 } from '../theme/consts.styles';
+import { colors } from '@/theme/colors';
 
 const MAX_TRANSLATE_Y = -windowHeight + 50;
 
@@ -136,18 +137,17 @@ const styles = StyleSheet.create({
   bottomSheetContainer: {
     height: screenHeight,
     width: screenWidth,
-    backgroundColor: 'red',
+    backgroundColor: 'white',
     position: 'absolute',
-    top: windowHeight,
     borderRadius: 25,
   },
 
   line: {
-    width: 75,
-    height: 4,
-    backgroundColor: 'grey',
+    width: 60,
+    height: 5,
+    backgroundColor: colors.gray,
     alignSelf: 'center',
     marginVertical: 15,
-    borderRadius: 2,
+    borderRadius: 5,
   },
 });

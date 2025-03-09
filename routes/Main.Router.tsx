@@ -1,19 +1,20 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React from "react";
-import { Routes } from "./routes";
-import { NavigationParamList } from "@/types/navigation.types";
-import { SafeAreaView } from "react-native";
-import { HomeScreen } from "@/app/Home.Screen";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import React from 'react';
+import { Routes } from './routes';
+import { NavigationParamList } from '@/types/navigation.types';
+import { HomeScreen } from '@/app/Home.Screen';
+import { ChatScreen } from '@/app/Chat.Screen';
 
-const Stack = createNativeStackNavigator<NavigationParamList>();
+const MianStack = createNativeStackNavigator<NavigationParamList>();
 
 export const MainRouter = () => {
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, animation: "slide_from_left" }}
+    <MianStack.Navigator
+      screenOptions={{ headerShown: false, animation: 'slide_from_left' }}
       initialRouteName={Routes.home}
     >
-      <Stack.Screen name={Routes.home} component={HomeScreen} />
-    </Stack.Navigator>
+      <MianStack.Screen name={Routes.home} component={HomeScreen} />
+      <MianStack.Screen name={Routes.chat} component={ChatScreen} />
+    </MianStack.Navigator>
   );
 };

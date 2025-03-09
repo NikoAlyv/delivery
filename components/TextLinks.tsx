@@ -1,9 +1,10 @@
-import React, {Fragment, useCallback, useMemo} from 'react';
-import {StyleProp, Text, TextStyle} from 'react-native';
+import React, { Fragment, useCallback, useMemo } from 'react';
+import { ActivityIndicator, StyleProp, Text, TextStyle } from 'react-native';
 
-import {colors} from '../theme/colors';
-import {TypographyStyles} from '../theme/typography';
-import {CommonStyles} from '../theme/common.styles';
+import { colors } from '../theme/colors';
+import { TypographyStyles } from '../theme/typography';
+import { CommonStyles } from '../theme/common.styles';
+import { useTypography } from '@/hook/useTypography';
 
 interface HighlightedText {
   text: string;
@@ -25,6 +26,7 @@ export const TextLink: React.FC<TextLinkProps> = ({
   center,
   style,
 }: TextLinkProps) => {
+  const fontsLoaded = useTypography();
   const createHighlightedText = useCallback(
     (text: string, callback?: () => void, index?: number) => {
       const key = callback ? `${text}-${index}-highlighted` : 'remaining';
@@ -35,17 +37,18 @@ export const TextLink: React.FC<TextLinkProps> = ({
           key={key}
           onPress={callback}
           disabled={!callback}
-          style={[ {color: color}]}>
+          style={[{ color: color }]}
+        >
           {text}
         </Text>
       );
     },
-    [fontColor],
+    [fontColor]
   );
 
   const renderElements = useMemo(() => {
     let lastIndex = 0;
-    const elements = highlighted.map(({text, callback}, index) => {
+    const elements = highlighted.map(({ text, callback }, index) => {
       const startIndex = content.indexOf(text);
       const endIndex = startIndex + text.length;
       const normalText = content.slice(lastIndex, startIndex);
@@ -62,9 +65,17 @@ export const TextLink: React.FC<TextLinkProps> = ({
     elements.push(createHighlightedText(content.slice(lastIndex)));
     return elements;
   }, [content, createHighlightedText, highlighted]);
-
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color={colors.blue} />;
+  }
   return (
-    <Text style={[center && CommonStyles.textAlignCenter, style]}>
+    <Text
+      style={[
+        TypographyStyles.poppins14,
+        center && CommonStyles.textAlignCenter,
+        style,
+      ]}
+    >
       {renderElements}
     </Text>
   );

@@ -5,5 +5,8 @@ export const colors = {
   gray: '#b9b9b9',
   blue: '#3B82F6',
   background: '#0F172A',
-  yellow: '#f7a90c',
+  yellow: '#f3df00',
+  darkGray: '#545353',
+  green: '#095e01',
+  backdrop:  'rgba(0, 0, 0, 0.4)',
 };

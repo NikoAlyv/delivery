@@ -1,4 +1,14 @@
-import { View, Text, ScrollView, StatusBar, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
 import React, { useState } from 'react';
 import { InputControlled } from '@/components/InputControlled';
 import { useForm } from 'react-hook-form';
@@ -9,101 +19,118 @@ import { TextLink } from '@/components/TextLinks';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { NavigationParamList } from '@/types/navigation.types';
 import { Routes } from '@/routes/routes';
-import { CommonStyles } from '@/theme/common.styles';
 import { normalize } from '@/theme/metrics';
+import { useUserStoreActions } from '@/store/user';
+import { useToast } from '@/store/toast';
+import { windowHeight } from '@/theme/consts.styles';
 
 export interface IRegister {
   name: string;
   password: string;
-  comfirmPassword: string;
-  email: string;
+  phone: string;
 }
+
 export const RegisterScreen: React.FC<
-  NativeStackScreenProps<NavigationParamList, Routes.login>
+  NativeStackScreenProps<NavigationParamList, Routes.register>
 > = ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isLoading },
+    formState: { errors },
   } = useForm<IRegister>({
     defaultValues: {
       name: '',
-      email: '',
+      phone: '',
       password: '',
     },
   });
 
+  const { initUser } = useUserStoreActions();
+  const showToast = useToast();
+
+  const onSubmit = async (data: IRegister) => {
+    console.log(data);
+    initUser(data);
+    setLoading(false);
+    showToast('success', 'User Registered');
+  };
+
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
-      scrollEnabled={false}
-      contentContainerStyle={[CommonStyles.flexJustifyCenter, styles.root]}
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.root}
     >
       <StatusBar backgroundColor={colors.white} barStyle={'dark-content'} />
+      <View style={styles.container}>
+        <InputControlled
+          control={control}
+          errorMessage={errors.name?.message}
+          rules={FormRules.fullName}
+          label="İstifadəçi adı"
+          placeholder="Nihad Aliyev"
+          name="name"
+          type="user"
+        />
 
-      <InputControlled
-        control={control}
-        errorMessage={errors.name?.message}
-        rules={FormRules.fullName}
-        label="User Name"
-        style={styles.inputSpace}
-        placeholder="Enter your name"
-        name="name"
-        type="user"
-      />
+        <InputControlled
+          keyboardType="phone-pad"
+          control={control}
+          errorMessage={errors.phone?.message}
+          rules={FormRules.phone}
+          label="Telefon nömrəsi"
+          name="phone"
+          type="text"
+          placeholder="070 532 95 07"
+        />
+        <InputControlled
+          control={control}
+          placeholder="********"
+          name="password"
+          label="Şifrə"
+          errorMessage={errors.password?.message}
+          type="password"
+          rules={FormRules.password}
+        />
 
-      <InputControlled
-        keyboardType="email-address"
-        control={control}
-        style={styles.inputSpace}
-        errorMessage={errors.email?.message}
-        rules={FormRules.email}
-        label="Email"
-        name="email"
-        type="text"
-        placeholder="Enter your email"
-      />
-      <InputControlled
-        control={control}
-        placeholder="Enter your password"
-        name="password"
-        label="Password"
-        style={styles.inputSpace}
-        errorMessage={errors.password?.message}
-        type="password"
-        rules={FormRules.password}
-      />
-
-      <Button
-        title="Create an account"
-        style={styles.button}
-        loading={loading}
-      />
-      <TextLink
-        content="Do syou have an account?
- Sign in"
-        center
-        highlighted={[
-          {
-            text: 'Sign in',
-            callback: () => navigation.navigate(Routes.login),
-          },
-        ]}
-      />
+        <Button
+          title="Hesab yaradın"
+          style={styles.button}
+          loading={loading}
+          onPress={handleSubmit(onSubmit)}
+        />
+        <TextLink
+          content="Sizin hesabınız var? Daxil olun"
+          center
+          highlighted={[
+            {
+              text: 'Daxil olun',
+              callback: () => navigation.navigate(Routes.login),
+            },
+          ]}
+        />
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    paddingHorizontal: normalize('horizontal', 24),
-  },
-  inputSpace: {
-    marginVertical: normalize('vertical', 10),
+    flexGrow: 1,
+    justifyContent: 'center',
+    backgroundColor: colors.yellow,
+    paddingTop: windowHeight / 4,
   },
   button: {
-    marginBottom: 10,
+    marginVertical: normalize('vertical', 15),
+  },
+  container: {
+    flex: 1,
+    paddingTop: 100,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 130,
+    paddingHorizontal: normalize('horizontal', 24),
   },
 });

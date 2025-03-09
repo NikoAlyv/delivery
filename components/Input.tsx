@@ -8,23 +8,27 @@ import {
   ViewStyle,
   Pressable,
   TextStyle,
-} from "react-native";
-import React, { useMemo, useState } from "react";
-import { SvgImage } from "./SvgImage";
-import { TypographyStyles } from "../theme/typography";
-import { colors } from "../theme/colors";
-import { standardHitSlopSize } from "../theme/consts.styles";
+  ActivityIndicator,
+} from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { SvgImage } from './SvgImage';
+import { TypographyStyles } from '../theme/typography';
+import { colors } from '../theme/colors';
+import { standardHitSlopSize } from '../theme/consts.styles';
+import { useTypography } from '@/hook/useTypography';
+import { CommonStyles } from '@/theme/common.styles';
+import { normalize } from '@/theme/metrics';
 
 export type TIcon = {
   source: NodeRequire;
   color?: string;
   width?: number;
   height?: number;
-  position?: "left" | "right";
+  position?: 'left' | 'right';
 };
 
 export interface IInput {
-  type?: "text" | "password" | "user";
+  type?: 'text' | 'password' | 'user';
   label?: string;
   caption?: string;
   value?: string;
@@ -46,7 +50,7 @@ export interface IInput {
 }
 export const Input: React.FC<IInput> = ({
   value,
-  type = "text",
+  type = 'text',
   setValue,
   icon,
   inputStyle,
@@ -57,33 +61,38 @@ export const Input: React.FC<IInput> = ({
 }) => {
   const [focused, setFocused] = useState<boolean>(false);
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(
-    type === "password"
+    type === 'password'
   );
   const [open, setOpen] = useState<boolean>(false);
 
+  const fontsLoaded = useTypography();
+  if (!fontsLoaded) {
+    return <ActivityIndicator size="large" color={colors.blue} />;
+  }
   const isMoreIcon = useMemo(
     () =>
-      ("position" in (icon ?? {}) && (icon as TIcon)?.position === "right") ||
-      type === "password" ||
-      type === "user",
+      ('position' in (icon ?? {}) && (icon as TIcon)?.position === 'right') ||
+      type === 'password' ||
+      type === 'user',
     [icon, type]
   );
 
   const isPressable = props.onInputPress instanceof Function;
 
   const renderIcon = useMemo(() => {
-    if (type === "password") {
+    if (type === 'password') {
       return (
         <Pressable
           onPress={() => setSecureTextEntry((state) => !state)}
           hitSlop={standardHitSlopSize}
+          style={CommonStyles.alginSelfCenter}
         >
           <SvgImage
             color={colors.white}
             source={
               secureTextEntry
-                ? require("../assets/vectors/eye-off.svg")
-                : require("../assets/vectors/eye.svg")
+                ? require('../assets/vectors/eye-off.svg')
+                : require('../assets/vectors/eye.svg')
             }
             width={20}
             fill={colors.black}
@@ -96,7 +105,7 @@ export const Input: React.FC<IInput> = ({
     if (!icon) {
       return null;
     }
-    if ("source" in icon) {
+    if ('source' in icon) {
       return (
         <SvgImage
           source={icon.source}
@@ -124,13 +133,17 @@ export const Input: React.FC<IInput> = ({
 
   return (
     <View style={[props?.style]}>
-      {props.label ? <Text style={[labelStyle]}>{props.label}</Text> : null}
+      {props.label ? (
+        <Text style={[TypographyStyles.montserrat14, labelStyle]}>
+          {props.label}
+        </Text>
+      ) : null}
       <View
         style={[
           styles.wrapper,
           focused && styles.focused,
           props.disabled && styles.wrapperDisabled,
-          isMoreIcon && { flexDirection: "row-reverse" },
+          isMoreIcon && { flexDirection: 'row-reverse' },
           inputStyle,
         ]}
       >
@@ -153,10 +166,17 @@ export const Input: React.FC<IInput> = ({
       </View>
 
       {props.caption || props.errorMessage ? (
-        <Text style={[props?.errorMessage ? styles.error : undefined]}>
+        <Text
+          style={[
+            TypographyStyles.inter12,
+            props?.errorMessage ? styles.error : undefined,
+          ]}
+        >
           {props.errorMessage ?? props.caption}
         </Text>
-      ) : null}
+      ) : (
+        <View style={styles.space} />
+      )}
     </View>
   );
 };
@@ -164,22 +184,26 @@ export const Input: React.FC<IInput> = ({
 const styles = StyleSheet.create({
   focused: {
     borderBottomWidth: 2,
-    borderColor: colors.blue,
+    borderColor: colors.yellow,
   },
   wrapperDisabled: {},
   error: {
     color: colors.red,
   },
+  space: {
+    height: 16,
+  },
   wrapper: {
+    marginTop: 4,
     borderWidth: 1,
-    borderRadius:12,
-    borderColor:colors.black,
-    padding:5,
-    height: 40,
+    borderRadius: 12,
+    borderColor: colors.black,
+    padding: 1,
+    paddingHorizontal: normalize('horizontal', 10),
+    height: 45,
     gap: 10,
   },
   input: {
-    height: "100%",
     flex: 1,
     flexGrow: 1,
   },
