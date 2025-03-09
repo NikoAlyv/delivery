@@ -30,7 +30,7 @@ export const HomeScreen: React.FC<
   const [menuIcon, setMenuIcon] = useState<boolean>(false);
   const closeScreen = () => setMenuIcon(false);
   const showToast = useToast();
-
+  const MAPS_APIKEY: any = process.env.EXPO_PUBLIC_GOOGLE_MAPS_APIKEY;
   const courierLocation = {
     latitude: 40.4616,
     longitude: 49.7264,
@@ -78,7 +78,7 @@ export const HomeScreen: React.FC<
               longitude: userLocation.coords.longitude,
             }}
             destination={courierLocation}
-            apikey={'AIzaSyB2dmmq_evBGsP1zIr2F4NzpiIAJL2i7IA'}
+            apikey={MAPS_APIKEY}
             strokeWidth={4}
             strokeColor="blue"
             onReady={(result) => {
